@@ -1,0 +1,55 @@
+USERS
+=====
+
+GET    /users
+GET    /users/{id}
+POST   /users
+PUT    /users/{id}
+DELETE /users/{id}
+
+
+WORKSPACES
+==========
+
+GET    /workspaces
+GET    /workspaces/{id}
+GET    /workspaces/user/{userId}
+POST   /workspaces
+PUT    /workspaces/{id}
+DELETE /workspaces/{id}
+
+
+BOARDS
+======
+
+GET    /boards
+GET    /boards/{id}
+GET    /boards/workspace/{workspaceId}
+POST   /boards
+PUT    /boards/{id}
+DELETE /boards/{id}
+
+
+BOARD STATES
+============
+
+GET    /board-states
+GET    /board-states/{id}
+GET    /board-states/board/{boardId}
+POST   /board-states
+PUT    /board-states/{id}
+DELETE /board-states/{id}
+
+
+TOTAL: 23 ENDPOINTS
+===================
+
+Users:        5
+Workspaces:   6
+Boards:       6
+BoardStates:  6
+
+Total:       23
+
+mail - tester@gmail.com
+pass - tester

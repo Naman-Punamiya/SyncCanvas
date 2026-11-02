@@ -1,0 +1,8 @@
+package com.ndevstudios.synccanvas.repository;
+
+import com.ndevstudios.synccanvas.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User,Long> {
+
+}
