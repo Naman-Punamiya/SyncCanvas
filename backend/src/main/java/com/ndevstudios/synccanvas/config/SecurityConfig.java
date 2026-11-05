@@ -1,6 +1,7 @@
 package com.ndevstudios.synccanvas.config;
 
 import com.ndevstudios.synccanvas.security.JwtAuthenticationFilter;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.boot.internal.Abstract;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -49,6 +50,7 @@ public class SecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/users").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
@@ -56,7 +58,7 @@ public class SecurityConfig {
                 ).addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
-                );;
+                );
         return http.build();
     }
 }

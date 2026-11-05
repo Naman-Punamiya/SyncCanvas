@@ -6,6 +6,7 @@ import com.ndevstudios.synccanvas.dto.response.LoginResponse;
 import com.ndevstudios.synccanvas.dto.response.UserResponse;
 import com.ndevstudios.synccanvas.entity.User;
 import com.ndevstudios.synccanvas.exception.EmailAlreadyExistsException;
+import com.ndevstudios.synccanvas.exception.InvalidCredentialsException;
 import com.ndevstudios.synccanvas.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,7 +64,7 @@ public class UserService {
 
     public LoginResponse authenticate(LoginRequest req){
         User user = userRepository.findByEmail(req.getEmail())
-                .orElseThrow(() -> new EmailAlreadyExistsException("Invalid Email or Password"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid Email or Password"));
 
         boolean passwordMatches = passwordEncoder.matches(
                 req.getPassword(),
@@ -71,7 +72,7 @@ public class UserService {
         );
 
         if(!passwordMatches){
-            throw new EmailAlreadyExistsException("Invalid Email or Password");
+            throw new InvalidCredentialsException("Invalid Email or Password");
         }
 
         String token = jwtService.generateToken(user.getId().toString());

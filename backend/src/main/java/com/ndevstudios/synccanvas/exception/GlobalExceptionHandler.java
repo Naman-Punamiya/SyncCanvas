@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ApiErrorResponse> handleIllegalArgument (IllegalArgumentException exception){
+    public ResponseEntity<ApiErrorResponse> handleIllegalArgument (EmailAlreadyExistsException exception){
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 exception.getMessage(),
@@ -50,5 +50,31 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(WorkspaceNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleWorkspaceNotFound(
+            WorkspaceNotFoundException exception) {
+
+        ApiErrorResponse error = new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(WorkspaceAccessDeniedException.class)
+    public ResponseEntity<ApiErrorResponse> handleWorkspaceAccessDenied(
+            WorkspaceAccessDeniedException exception) {
+
+        ApiErrorResponse error = new ApiErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 }

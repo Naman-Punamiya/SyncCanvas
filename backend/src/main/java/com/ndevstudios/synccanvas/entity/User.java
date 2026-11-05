@@ -1,15 +1,18 @@
 package com.ndevstudios.synccanvas.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +32,9 @@ public class User {
 
     @Column(nullable = false,name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Workspace> workspaces = new ArrayList<>();
 
     public User(String email, String passwordHash, String displayName) {
         this.email = email;
