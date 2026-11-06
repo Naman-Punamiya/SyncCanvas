@@ -1,24 +1,23 @@
 package com.ndevstudios.synccanvas.service;
 
 import com.ndevstudios.synccanvas.dto.request.CreateBoardRequest;
-import com.ndevstudios.synccanvas.dto.request.CreateWorkspaceRequest;
 import com.ndevstudios.synccanvas.dto.request.UpdateBoardRequest;
-import com.ndevstudios.synccanvas.dto.request.UpdateWorkspaceRequest;
 import com.ndevstudios.synccanvas.dto.response.BoardResponse;
-import com.ndevstudios.synccanvas.dto.response.WorkspaceResponse;
 import com.ndevstudios.synccanvas.entity.Board;
-import com.ndevstudios.synccanvas.entity.User;
+import com.ndevstudios.synccanvas.entity.BoardState;
 import com.ndevstudios.synccanvas.entity.Workspace;
 import com.ndevstudios.synccanvas.exception.BoardNotFoundException;
 import com.ndevstudios.synccanvas.exception.WorkspaceAccessDeniedException;
 import com.ndevstudios.synccanvas.exception.WorkspaceNotFoundException;
 import com.ndevstudios.synccanvas.repository.BoardRepository;
+import com.ndevstudios.synccanvas.repository.BoardStateRepository;
 import com.ndevstudios.synccanvas.repository.UserRepository;
 import com.ndevstudios.synccanvas.repository.WorkspaceRepository;
 import com.ndevstudios.synccanvas.security.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,10 +25,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final BoardStateRepository boardStateRepository;
     private final WorkspaceRepository workspaceRepository;
     private final UserRepository userRepository;
     private final CurrentUser currentUser;
 
+    @Transactional
     public BoardResponse createBoard(Long workspaceId, CreateBoardRequest req) {
         Long userId = currentUser.getId();
 
@@ -49,6 +50,13 @@ public class BoardService {
         board.setUpdatedAt(now);
 
         Board savedBoard = boardRepository.save(board);
+        BoardState boardState = new BoardState();
+        boardState.setBoard(savedBoard);
+        boardState.setContentJson(JsonNodeFactory.instance.objectNode());
+        boardState.setVersion(0L);
+        boardState.setUpdatedAt(now);
+
+        boardStateRepository.save(boardState);
 
         return new BoardResponse(savedBoard.getId(), savedBoard.getName(), savedBoard.getDescription(), savedBoard.getWorkspace().getId(), savedBoard.getCreatedAt(), savedBoard.getUpdatedAt());
     }
